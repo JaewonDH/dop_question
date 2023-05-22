@@ -24,9 +24,17 @@
         <button :disabled="disabledNextButton">&gt;</button>
       </div>
     </div>
-    <div class="button mix-button">
-      <button translate="no" @click="onMix()">M</button>
-      <button translate="no" @click="onExampleMix()">EM</button>
+    <div class="option">
+      <div class="button mix-button">
+        <button translate="no" @click="onMix()">M</button>
+        <button translate="no" @click="onExampleMix()">EM</button>
+      </div>
+      <div class="input-container">
+        <div class="label">범위</div>
+        <input type="number" v-model="startNumber" />
+        <input type="number" v-model="endNumber" />
+        <button translate="no" @click="onBoundary()">B</button>
+      </div>
     </div>
   </main>
 </template>
@@ -42,10 +50,10 @@ const dump = dumps[0];
 const question = ref("");
 const examples = ref([]);
 const unknown = ref("");
-
+const startNumber = ref(1);
+const endNumber = ref(20);
 let answers = [];
 const questionIndex = ref(0);
-dumps = orgDumps;
 
 const shuffle = (examples) => {
   // let array = _.shuffle(examples);
@@ -133,8 +141,21 @@ const onAnswer = (example) => {
   example.class = find === undefined ? "fail" : "success";
 };
 
+const getBoundaryDumps = () => {
+  return orgDumps.filter((item, index) => {
+    return startNumber.value <= index + 1 && endNumber.value >= index + 1;
+  });
+};
+
+const onBoundary = () => {
+  dumps = getBoundaryDumps();
+  console.log("dumps :>> ", dumps);
+  questionIndex.value = 0;
+  setQuestion(dumps[questionIndex.value]);
+};
+
 const onMix = () => {
-  dumps = shuffle(orgDumps);
+  dumps = shuffle(getBoundaryDumps());
   questionIndex.value = 0;
   setQuestion(dumps[questionIndex.value]);
 };
@@ -143,6 +164,7 @@ const onExampleMix = () => {
   setQuestion(dumps[questionIndex.value]);
 };
 
+dumps = getBoundaryDumps();
 setQuestion(dumps[questionIndex.value]);
 </script>
 
@@ -170,7 +192,8 @@ setQuestion(dumps[questionIndex.value]);
   margin-bottom: 40px;
 }
 
-.button {
+.button,
+.input-container {
   display: flex;
   align-items: center;
 }
@@ -181,6 +204,17 @@ button {
   width: 50px;
   height: 50px;
   margin: 50px;
+}
+
+input,
+.label {
+  width: 100px;
+  height: 25px;
+  margin-right: 15px;
+}
+
+.option {
+  display: flex;
 }
 
 .answer {
