@@ -7,7 +7,7 @@
       <div>
         <h2 translate="no">
           {{ questionNumber }}
-          {{ answerQuestion ? " ??" : "" }}
+          {{ unknown ? " ??" : "" }}
         </h2>
         <p class="question" v-html="question"></p>
         <p
@@ -40,7 +40,7 @@ const dumps = DOP_C02;
 const dump = dumps[0];
 const question = ref("");
 const examples = ref([]);
-const answerQuestion = ref("");
+const unknown = ref("");
 
 let answers = [];
 const questionIndex = ref(0);
@@ -68,7 +68,7 @@ const getEquals = (orgList, destList) => {
 const setQuestion = (dump) => {
   question.value = dump.question;
 
-  answerQuestion.value = dump.answerQuestion;
+  unknown.value = dump.unknown;
 
   const answersIndexList = dump.answers.map((o) => {
     return examplePrefix.value.findIndex((e) => o === e);
@@ -83,7 +83,8 @@ const setQuestion = (dump) => {
     return result !== undefined;
   });
 
-  examples.value = shuffle(dump.examples);
+  // examples.value = shuffle(dump.examples);
+  examples.value = dump.examples;
   examples.value = examples.value.map((e) => {
     return {
       sentence: e,
