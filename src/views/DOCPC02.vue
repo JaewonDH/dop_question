@@ -36,7 +36,8 @@ import { ref, computed, reactive } from "vue";
 import { DOP_C02 } from "/src/dump/dop-c02.js";
 import _ from "lodash";
 const examplePrefix = ref(["A", "B", "C", "D", "E", "F", "G"]);
-const dumps = DOP_C02;
+const orgDumps = DOP_C02;
+let dumps = [];
 const dump = dumps[0];
 const question = ref("");
 const examples = ref([]);
@@ -44,8 +45,10 @@ const unknown = ref("");
 
 let answers = [];
 const questionIndex = ref(0);
+dumps = orgDumps;
 
 const shuffle = (examples) => {
+  // let array = _.shuffle(examples);
   let array = _.cloneDeep(examples);
   for (let index = array.length - 1; index > 0; index--) {
     const randomPosition = Math.floor(Math.random() * (index + 1));
@@ -131,9 +134,9 @@ const onAnswer = (example) => {
 };
 
 const onMix = () => {
-  const mixDumps = shuffle(dumps);
+  dumps = shuffle(orgDumps);
   questionIndex.value = 0;
-  setQuestion(mixDumps[questionIndex.value]);
+  setQuestion(dumps[questionIndex.value]);
 };
 
 const onExampleMix = () => {
