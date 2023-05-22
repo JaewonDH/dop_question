@@ -1,8 +1,8 @@
 <template>
   <main>
     <div class="questionInfo">
-      <div class="button" @click="onPrevious">
-        <button :disabled="disabledPreButton">&lt;</button>
+      <div class="button">
+        <button :disabled="disabledPreButton" @click="onPrevious">&lt;</button>
       </div>
       <div>
         <h2 translate="no">
@@ -20,8 +20,8 @@
           {{ `${examplePrefix[index]}. ${example.sentence}` }}
         </p>
       </div>
-      <div class="button" @click="onNext">
-        <button :disabled="disabledNextButton">&gt;</button>
+      <div class="button">
+        <button :disabled="disabledNextButton" @click="onNext">&gt;</button>
       </div>
     </div>
     <div class="option">
@@ -94,8 +94,8 @@ const setQuestion = (dump) => {
     return result !== undefined;
   });
 
-  // examples.value = shuffle(dump.examples);
-  examples.value = dump.examples;
+  examples.value = shuffle(dump.examples);
+  // examples.value = dump.examples;
   examples.value = examples.value.map((e) => {
     return {
       sentence: e,
