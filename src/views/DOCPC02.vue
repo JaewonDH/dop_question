@@ -16,9 +16,8 @@
           :key="index"
           :class="example.class"
           @click="onAnswer(example)"
-        >
-          {{ `${examplePrefix[index]}. ${example.sentence}` }}
-        </p>
+          v-html="`${examplePrefix[index]}. ${example.sentence}`"
+        ></p>
       </div>
       <div class="button">
         <button :disabled="disabledNextButton" @click="onNext">&gt;</button>
@@ -56,7 +55,7 @@ const question = ref("");
 const examples = ref([]);
 const unknown = ref("");
 const startNumber = ref(1);
-const endNumber = ref(20);
+const endNumber = ref(orgDumps.length);
 const selectedStr = ref("");
 let answers = [];
 const questionIndex = ref(0);
@@ -176,11 +175,12 @@ const onExampleMix = () => {
 const selectedQuestions = () => {
   const list = selectedStr.value.split(",");
   console.log("list :>> ", list);
-  dumps = orgDumps.filter((o) => {
+  const newList = orgDumps.filter((o) => {
     const find = list.find((n) => o.number === +n);
     console.log("find :>> ", find);
     return find !== undefined;
   });
+  dumps = shuffle(newList);
   console.log("dumps :>> ", dumps);
   initQuestion();
 };
