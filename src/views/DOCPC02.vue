@@ -6,7 +6,7 @@
       </div>
       <div>
         <h2 translate="no">
-          {{ questionNumber }}
+          {{ `${questionNumber}(${orgNumber})` }}
           {{ unknown ? " ??" : "" }}
         </h2>
         <p class="question" v-html="question"></p>
@@ -26,14 +26,19 @@
     </div>
     <div class="option">
       <div class="button mix-button">
-        <button translate="no" @click="onMix()">M</button>
-        <button translate="no" @click="onExampleMix()">EM</button>
+        <button translate="no" @click="onMix">M</button>
+        <button translate="no" @click="onExampleMix">EM</button>
       </div>
       <div class="input-container">
         <div class="label">범위</div>
         <input type="number" v-model="startNumber" />
         <input type="number" v-model="endNumber" />
-        <button translate="no" @click="onBoundary()">B</button>
+        <button translate="no" @click="onBoundary">s</button>
+      </div>
+      <div class="input-container">
+        <div class="label">선택</div>
+        <input type="text" v-model="selectedStr" />
+        <button translate="no" @click="selectedQuestions">s</button>
       </div>
     </div>
   </main>
@@ -52,18 +57,19 @@ const examples = ref([]);
 const unknown = ref("");
 const startNumber = ref(1);
 const endNumber = ref(20);
+const selectedStr = ref("");
 let answers = [];
 const questionIndex = ref(0);
-
+const orgNumber = ref(0);
 const shuffle = (examples) => {
-  // let array = _.shuffle(examples);
-  let array = _.cloneDeep(examples);
-  for (let index = array.length - 1; index > 0; index--) {
-    const randomPosition = Math.floor(Math.random() * (index + 1));
-    const temporary = array[index];
-    array[index] = array[randomPosition];
-    array[randomPosition] = temporary;
-  }
+  let array = _.shuffle(examples);
+  // let array = _.cloneDeep(examples);
+  // for (let index = array.length - 1; index > 0; index--) {
+  //   const randomPosition = Math.floor(Math.random() * (index + 1));
+  //   const temporary = array[index];
+  //   array[index] = array[randomPosition];
+  //   array[randomPosition] = temporary;
+  // }
   return array;
 };
 
@@ -78,7 +84,7 @@ const getEquals = (orgList, destList) => {
 
 const setQuestion = (dump) => {
   question.value = dump.question;
-
+  orgNumber.value = dump.number;
   unknown.value = dump.unknown;
 
   const answersIndexList = dump.answers.map((o) => {
@@ -147,25 +153,39 @@ const getBoundaryDumps = () => {
   });
 };
 
-const onBoundary = () => {
-  dumps = getBoundaryDumps();
-  console.log("dumps :>> ", dumps);
+const initQuestion = () => {
   questionIndex.value = 0;
   setQuestion(dumps[questionIndex.value]);
 };
 
+const onBoundary = () => {
+  dumps = getBoundaryDumps();
+  console.log("dumps :>> ", dumps);
+  initQuestion();
+};
+
 const onMix = () => {
   dumps = shuffle(getBoundaryDumps());
-  questionIndex.value = 0;
-  setQuestion(dumps[questionIndex.value]);
+  initQuestion();
 };
 
 const onExampleMix = () => {
   setQuestion(dumps[questionIndex.value]);
 };
 
-dumps = getBoundaryDumps();
-setQuestion(dumps[questionIndex.value]);
+const selectedQuestions = () => {
+  const list = selectedStr.value.split(",");
+  console.log("list :>> ", list);
+  dumps = orgDumps.filter((o) => {
+    const find = list.find((n) => o.number === +n);
+    console.log("find :>> ", find);
+    return find !== undefined;
+  });
+  console.log("dumps :>> ", dumps);
+  initQuestion();
+};
+
+onBoundary();
 </script>
 
 <style scoped>
