@@ -54,7 +54,7 @@ const dump = dumps[0];
 const question = ref("");
 const examples = ref([]);
 const unknown = ref("");
-const startNumber = ref(1);
+const startNumber = ref(20);
 const endNumber = ref(orgDumps.length);
 const selectedStr = ref("");
 let answers = [];
@@ -147,7 +147,14 @@ const onAnswer = (example) => {
 };
 
 const getBoundaryDumps = () => {
+  console.log("orgDumps :>> ", orgDumps);
   return orgDumps.filter((item, index) => {
+    console.log(
+      "startNumber  :>> ",
+      index,
+      startNumber.value <= index + 1,
+      endNumber.value >= index + 1
+    );
     return startNumber.value <= index + 1 && endNumber.value >= index + 1;
   });
 };
@@ -184,6 +191,14 @@ const selectedQuestions = () => {
   console.log("dumps :>> ", dumps);
   initQuestion();
 };
+
+const unknownCont = () => {
+  const list = orgDumps.filter((o) => o.unknown);
+  console.log("unknownCont list :>> ", list);
+  return list.length;
+};
+
+console.log("unknownCont :>> ", unknownCont());
 
 onBoundary();
 </script>
