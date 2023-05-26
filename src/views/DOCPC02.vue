@@ -149,12 +149,6 @@ const onAnswer = (example) => {
 const getBoundaryDumps = () => {
   console.log("orgDumps :>> ", orgDumps);
   return orgDumps.filter((item, index) => {
-    console.log(
-      "startNumber  :>> ",
-      index,
-      startNumber.value <= index + 1,
-      endNumber.value >= index + 1
-    );
     return startNumber.value <= index + 1 && endNumber.value >= index + 1;
   });
 };
@@ -181,14 +175,11 @@ const onExampleMix = () => {
 
 const selectedQuestions = () => {
   const list = selectedStr.value.split(",");
-  console.log("list :>> ", list);
   const newList = orgDumps.filter((o) => {
     const find = list.find((n) => o.number === +n);
-    console.log("find :>> ", find);
     return find !== undefined;
   });
   dumps = shuffle(newList);
-  console.log("dumps :>> ", dumps);
   initQuestion();
 };
 
