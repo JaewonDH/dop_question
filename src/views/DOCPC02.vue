@@ -1,14 +1,19 @@
 <template>
   <main>
     <div class="questionInfo">
-      <div class="button">
-        <button :disabled="disabledPreButton" @click="onPrevious">&lt;</button>
-      </div>
       <div>
-        <h2 translate="no">
-          {{ `${questionNumber}(${orgNumber})` }}
-          {{ unknown ? " ??" : "" }}
-        </h2>
+        <div class="hearder">
+          <h2 translate="no">
+            <!-- {{ `${questionNumber}(${orgNumber})` }} -->
+            {{ `${questionNumber}` }}
+            {{ unknown ? " ??" : "" }}
+          </h2>
+          <button :disabled="disabledPreButton" @click="onPrevious">
+            &lt;
+          </button>
+          <button :disabled="disabledNextButton" @click="onNext">&gt;</button>
+        </div>
+
         <p class="question" v-html="question"></p>
         <p
           class="example"
@@ -18,9 +23,6 @@
           @click="onAnswer(example)"
           v-html="`${examplePrefix[index]}. ${example.sentence}`"
         ></p>
-      </div>
-      <div class="button">
-        <button :disabled="disabledNextButton" @click="onNext">&gt;</button>
       </div>
     </div>
     <div class="option">
@@ -54,7 +56,7 @@ const dump = dumps[0];
 const question = ref("");
 const examples = ref([]);
 const unknown = ref("");
-const startNumber = ref(20);
+const startNumber = ref(1);
 const endNumber = ref(orgDumps.length);
 const selectedStr = ref("");
 let answers = [];
@@ -195,9 +197,26 @@ onBoundary();
 </script>
 
 <style scoped>
+.hearder {
+  display: flex;
+  align-items: center;
+  height: 60px;
+}
+
+@media (max-width: 300px) {
+  .desktop {
+    font-size: 10px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .mobile {
+    font-size: 20px;
+  }
+}
 .questionInfo {
   display: flex;
-  font-size: 20px;
+  /* font-size: 20px; */
 }
 
 .example {
